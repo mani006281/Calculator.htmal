@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfect Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .calculator {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    #display {
+      width: 100%;
+      height: 50px;
+      text-align: right;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: none;
+      background: #eee;
+      border-radius: 8px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+      justify-content: center;
+    }
+    button {
+      padding: 15px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .clear { background-color: #e74c3c; color: white; }
+    .operator { background-color: #f39c12; color: white; }
+    .equal { background-color: #27ae60; color: white; }
+    .number { background-color: #ecf0f1; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" disabled>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="appendOperator('/')">/</button>
+      <button class="operator" onclick="appendOperator('*')">*</button>
+      <button class="operator" onclick="appendOperator('-')">-</button>
+
+      <button class="number" onclick="appendNumber('7')">7</button>
+      <button class="number" onclick="appendNumber('8')">8</button>
+      <button class="number" onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendOperator('+')">+</button>
+
+      <button class="number" onclick="appendNumber('4')">4</button>
+      <button class="number" onclick="appendNumber('5')">5</button>
+      <button class="number" onclick="appendNumber('6')">6</button>
+      <button class="equal" onclick="calculate()">=</button>
+
+      <button class="number" onclick="appendNumber('1')">1</button>
+      <button class="number" onclick="appendNumber('2')">2</button>
+      <button class="number" onclick="appendNumber('3')">3</button>
+      <div></div> <!-- Empty cell for layout balance -->
+
+      <button class="number" onclick="appendNumber('0')" style="grid-column: span 4;">0</button>
+    </div>
+  </div>
+
+  <script>
+    let prev = '', curr = '', op = '';
+
+    function appendNumber(num) {
+      curr += num;
+      updateDisplay();
+    }
+
+    function appendOperator(operator) {
+      if (!curr) return;
+      if (prev) calculate();
+      op = operator;
+      prev = curr;
+      curr = '';
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (!prev || !curr) return;
+      const a = parseFloat(prev), b = parseFloat(curr);
+      let res;
+      switch (op) {
+        case '+': res = a + b; break;
+        case '-': res = a - b; break;
+        case '*': res = a * b; break;
+        case '/':
+          if (b === 0) { alert("Cannot divide by zero"); return; }
+          res = a / b;
+          break;
+        default: return;
+      }
+      curr = res.toString();
+      prev = op = '';
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      prev = curr = op = '';
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      document.getElementById('display').value =
+        prev + (op ? ' ' + op + ' ' : '') + curr;
+    }
+  </script>
+</body>
+</html>
